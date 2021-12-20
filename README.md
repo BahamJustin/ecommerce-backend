@@ -9,6 +9,7 @@ Used express, mysql, sequelize, and dotenv to create and seed a database that ca
 Insomnia can used to call the routes, as shown in the video below.
 
 ## Video
+https://streamable.com/v6qxtj
 
 ### Contact
 
