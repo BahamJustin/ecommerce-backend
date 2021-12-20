@@ -49,7 +49,7 @@ router.post("/", (req, res) => {
       product_name: "Basketball",
       price: 200.00,
       stock: 3,
-      tagIds: [1, 2, 3, 4]
+      tag_id: [1, 2, 3, 4]
     }
   */
   Product.create({
@@ -57,12 +57,12 @@ router.post("/", (req, res) => {
     price: req.body.price,
     stock: req.body.stock,
     category: req.body.category_id,
-    tag_id: [req.body.tag_id],
+    tag_id: req.body.tag_id,
   })
     .then((product) => {
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
-      if (req.body.tagIds.length) {
-        const productTagIdArr = req.body.tagIds.map((tag_id) => {
+      if (req.body.tag_id.length) {
+        const productTagIdArr = req.body.tag_id.map((tag_id) => {
           return {
             product_id: product.id,
             tag_id,
@@ -73,7 +73,7 @@ router.post("/", (req, res) => {
       // if no product tags, just respond
       res.status(200).json(product);
     })
-    .then((productTagIds) => res.status(200).json(productTagIds))
+    .then((producttag_id) => res.status(200).json(producttag_id))
     .catch((err) => {
       console.log(err);
       res.status(400).json(err);
@@ -94,10 +94,10 @@ router.put("/:id", (req, res) => {
     })
     .then((productTags) => {
       // get list of current tag_ids
-      const productTagIds = productTags.map(({ tag_id }) => tag_id);
+      const producttag_id = productTags.map(({ tag_id }) => tag_id);
       // create filtered list of new tag_ids
-      const newProductTags = req.body.tagIds
-        .filter((tag_id) => !productTagIds.includes(tag_id))
+      const newProductTags = req.body.tag_id
+        .filter((tag_id) => !producttag_id.includes(tag_id))
         .map((tag_id) => {
           return {
             product_id: req.params.id,
@@ -106,7 +106,7 @@ router.put("/:id", (req, res) => {
         });
       // figure out which ones to remove
       const productTagsToRemove = productTags
-        .filter(({ tag_id }) => !req.body.tagIds.includes(tag_id))
+        .filter(({ tag_id }) => !req.body.tag_id.includes(tag_id))
         .map(({ id }) => id);
 
       // run both actions
